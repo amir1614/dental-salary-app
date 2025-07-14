@@ -10,8 +10,8 @@ const API_CONFIG = {
   }
 };
 
-// Get current environment
-const isDevelopment = process.env.NODE_ENV === 'development';
+// Get current environment - default to production for deployed app
+const isDevelopment = process.env.NODE_ENV === 'development' && window.location.hostname === 'localhost';
 const currentConfig = isDevelopment ? API_CONFIG.development : API_CONFIG.production;
 
 // Export API endpoints
