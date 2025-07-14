@@ -1,3 +1,4 @@
+
 # dental.fyi - Dentist Salary Comparison Platform
 
 A comprehensive React-based web application for comparing dentist salaries across different locations and specialties, inspired by platforms like levels.fyi. Built by a high school student passionate about dental technology and transparency in healthcare compensation.
