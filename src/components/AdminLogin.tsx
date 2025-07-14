@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 interface AdminLoginProps {
   onLoginSuccess: () => void;
@@ -16,7 +17,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:3001/api/admin/login', {
+      const response = await fetch(API_ENDPOINTS.adminLogin, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

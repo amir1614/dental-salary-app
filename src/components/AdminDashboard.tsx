@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 interface UserSubmission {
   id: string;
@@ -49,7 +50,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const fetchSubmissions = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('http://localhost:3001/api/admin/submissions', {
+      const response = await fetch(API_ENDPOINTS.adminSubmissions, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -79,7 +80,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     setDeleteLoading(id);
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`http://localhost:3001/api/admin/submissions/${id}`, {
+      const response = await fetch(API_ENDPOINTS.adminDeleteSubmission(id), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

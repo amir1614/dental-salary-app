@@ -5,6 +5,7 @@ import About from './components/About';
 import Contact from './components/Contact';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
+import { API_ENDPOINTS } from './config/api';
 import blsData from './data/bls_dentists.json';
 
 interface SalaryData {
@@ -55,7 +56,7 @@ function App() {
 
   const fetchUserSubmissions = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/submissions');
+      const response = await fetch(API_ENDPOINTS.submissions);
       if (response.ok) {
         const data = await response.json();
         setUserSubmissions(data);

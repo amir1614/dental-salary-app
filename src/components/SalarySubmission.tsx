@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_ENDPOINTS } from '../config/api';
 
 interface SalarySubmission {
   position: string;
@@ -52,7 +53,7 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:3001/api/submissions', {
+      const response = await fetch(API_ENDPOINTS.submissions, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
