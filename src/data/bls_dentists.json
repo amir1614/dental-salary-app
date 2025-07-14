@@ -1,0 +1,122 @@
+[
+  {
+    "area": "United States - National",
+    "hourly_mean_wage": 86.19,
+    "annual_mean_wage": 179210,
+    "percentiles": {
+      "10": 53.30,
+      "25": 68.95,
+      "50": 84.27,
+      "75": 103.29,
+      "90": 135.05
+    }
+  },
+  {
+    "area": "California",
+    "hourly_mean_wage": 101.58,
+    "annual_mean_wage": 211340,
+    "percentiles": {
+      "10": 60.12,
+      "25": 78.45,
+      "50": 100.12,
+      "75": 120.45,
+      "90": 150.23
+    }
+  },
+  {
+    "area": "New York",
+    "hourly_mean_wage": 95.23,
+    "annual_mean_wage": 198080,
+    "percentiles": {
+      "10": 58.45,
+      "25": 72.30,
+      "50": 92.15,
+      "75": 115.67,
+      "90": 140.89
+    }
+  },
+  {
+    "area": "Texas",
+    "hourly_mean_wage": 82.45,
+    "annual_mean_wage": 171500,
+    "percentiles": {
+      "10": 52.10,
+      "25": 65.30,
+      "50": 80.25,
+      "75": 98.45,
+      "90": 125.67
+    }
+  },
+  {
+    "area": "Florida",
+    "hourly_mean_wage": 78.90,
+    "annual_mean_wage": 164100,
+    "percentiles": {
+      "10": 48.75,
+      "25": 62.40,
+      "50": 76.80,
+      "75": 94.20,
+      "90": 118.50
+    }
+  },
+  {
+    "area": "Illinois",
+    "hourly_mean_wage": 85.67,
+    "annual_mean_wage": 178200,
+    "percentiles": {
+      "10": 54.20,
+      "25": 68.90,
+      "50": 83.45,
+      "75": 102.30,
+      "90": 130.15
+    }
+  },
+  {
+    "area": "Pennsylvania",
+    "hourly_mean_wage": 80.12,
+    "annual_mean_wage": 166650,
+    "percentiles": {
+      "10": 50.45,
+      "25": 64.30,
+      "50": 78.20,
+      "75": 96.15,
+      "90": 120.45
+    }
+  },
+  {
+    "area": "Ohio",
+    "hourly_mean_wage": 76.89,
+    "annual_mean_wage": 159930,
+    "percentiles": {
+      "10": 48.20,
+      "25": 61.45,
+      "50": 74.80,
+      "75": 92.15,
+      "90": 115.30
+    }
+  },
+  {
+    "area": "Michigan",
+    "hourly_mean_wage": 75.45,
+    "annual_mean_wage": 156940,
+    "percentiles": {
+      "10": 47.80,
+      "25": 60.15,
+      "50": 73.20,
+      "75": 90.45,
+      "90": 112.80
+    }
+  },
+  {
+    "area": "Georgia",
+    "hourly_mean_wage": 79.23,
+    "annual_mean_wage": 164800,
+    "percentiles": {
+      "10": 49.85,
+      "25": 63.40,
+      "50": 77.10,
+      "75": 95.20,
+      "90": 118.90
+    }
+  }
+] 
