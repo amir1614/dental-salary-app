@@ -9,7 +9,10 @@ const app = express();
 const PORT = 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://amir1614.github.io', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Database setup
