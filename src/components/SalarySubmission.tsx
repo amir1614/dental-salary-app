@@ -5,7 +5,6 @@ interface SalarySubmission {
   position: string;
   location: string;
   company: string;
-  employmentType: string;
   baseSalary: number;
   totalComp: number;
   experience: number;
@@ -22,7 +21,6 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
     position: '',
     location: '',
     company: '',
-    employmentType: '',
     baseSalary: 0,
     totalComp: 0,
     experience: 0,
@@ -72,7 +70,6 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
           position: '',
           location: '',
           company: '',
-          employmentType: '',
           baseSalary: 0,
           totalComp: 0,
           experience: 0,
@@ -160,21 +157,6 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
                 </div>
 
                 <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="employmentType" className="form-label">Employment Type *</label>
-                    <select 
-                      className="form-select" 
-                      id="employmentType" 
-                      name="employmentType" 
-                      value={formData.employmentType}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="">Select Employment Type</option>
-                      <option value="Self-Employed">Self-Employed</option>
-                      <option value="Employed">Employed by Someone Else</option>
-                    </select>
-                  </div>
                   <div className="col-md-6 mb-3">
                     <label htmlFor="company" className="form-label">Company</label>
                     <input 

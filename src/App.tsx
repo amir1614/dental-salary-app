@@ -26,7 +26,6 @@ interface UserSubmission {
   position: string;
   location: string;
   company: string;
-  employmentType: string;
   baseSalary: number;
   totalComp: number;
   experience: number;
@@ -165,7 +164,6 @@ function App() {
                 <tr>
                   <th>Position</th>
                   <th>Location</th>
-                  <th>Employment Type</th>
                   <th>Company</th>
                   <th>Base Salary</th>
                   <th>Total Comp</th>
@@ -178,11 +176,6 @@ function App() {
                   <tr key={item.id}>
                     <td><strong>{item.position}</strong></td>
                     <td>{item.location}</td>
-                    <td>
-                      <span className={`badge ${item.employmentType === 'Self-Employed' ? 'bg-warning' : 'bg-success'}`}>
-                        {item.employmentType}
-                      </span>
-                    </td>
                     <td>{item.company || 'N/A'}</td>
                     <td className="text-success fw-bold">{formatCurrency(item.baseSalary)}</td>
                     <td className="text-success fw-bold">{formatCurrency(item.totalComp)}</td>

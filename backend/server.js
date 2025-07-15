@@ -27,7 +27,6 @@ db.serialize(() => {
       position TEXT NOT NULL,
       location TEXT NOT NULL,
       company TEXT,
-      employmentType TEXT NOT NULL,
       baseSalary REAL NOT NULL,
       totalComp REAL NOT NULL,
       experience REAL NOT NULL,
@@ -86,7 +85,6 @@ app.post('/api/submissions', (req, res) => {
     position,
     location,
     company,
-    employmentType,
     baseSalary,
     totalComp,
     experience,
@@ -96,7 +94,7 @@ app.post('/api/submissions', (req, res) => {
   } = req.body;
 
   // Validate required fields
-  if (!position || !location || !employmentType || !baseSalary || !totalComp || experience === undefined) {
+  if (!position || !location || !baseSalary || !totalComp || experience === undefined) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -105,8 +103,8 @@ app.post('/api/submissions', (req, res) => {
 
   const stmt = db.prepare(`
     INSERT INTO salary_submissions 
-    (id, position, location, company, employmentType, baseSalary, totalComp, experience, benefits, additionalNotes, submittedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (id, position, location, company, baseSalary, totalComp, experience, benefits, additionalNotes, submittedAt)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
@@ -114,7 +112,6 @@ app.post('/api/submissions', (req, res) => {
     position,
     location,
     company || '',
-    employmentType,
     baseSalary,
     totalComp,
     experience,

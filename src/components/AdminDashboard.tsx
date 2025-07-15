@@ -6,7 +6,6 @@ interface UserSubmission {
   position: string;
   location: string;
   company: string;
-  employmentType: string;
   baseSalary: number;
   totalComp: number;
   experience: number;
@@ -151,7 +150,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                   <tr>
                     <th>Position</th>
                     <th>Location</th>
-                    <th>Employment Type</th>
                     <th>Company</th>
                     <th>Base Salary</th>
                     <th>Total Comp</th>
@@ -166,11 +164,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     <tr key={submission.id}>
                       <td><strong>{submission.position}</strong></td>
                       <td>{submission.location}</td>
-                      <td>
-                        <span className={`badge ${submission.employmentType === 'Self-Employed' ? 'bg-warning' : 'bg-success'}`}>
-                          {submission.employmentType}
-                        </span>
-                      </td>
                       <td>{submission.company || 'N/A'}</td>
                       <td className="text-success fw-bold">
                         {formatCurrency(submission.baseSalary)}
