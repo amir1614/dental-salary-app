@@ -1,4 +1,4 @@
-   npm run build
+npm run build
    npm run deploy
 # dental.fyi - Dentist Salary Comparison Platform
 
