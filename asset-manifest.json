@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/dental-salary-app/static/css/main.1c6cc986.css",
-    "main.js": "/dental-salary-app/static/js/main.44e52e57.js",
+    "main.js": "/dental-salary-app/static/js/main.03de5957.js",
     "static/js/453.ac46d15a.chunk.js": "/dental-salary-app/static/js/453.ac46d15a.chunk.js",
     "index.html": "/dental-salary-app/index.html",
     "main.1c6cc986.css.map": "/dental-salary-app/static/css/main.1c6cc986.css.map",
-    "main.44e52e57.js.map": "/dental-salary-app/static/js/main.44e52e57.js.map",
+    "main.03de5957.js.map": "/dental-salary-app/static/js/main.03de5957.js.map",
     "453.ac46d15a.chunk.js.map": "/dental-salary-app/static/js/453.ac46d15a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.1c6cc986.css",
-    "static/js/main.44e52e57.js"
+    "static/js/main.03de5957.js"
   ]
 }
