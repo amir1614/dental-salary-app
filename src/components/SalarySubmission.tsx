@@ -144,10 +144,7 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
                     {errorMessage}
                   </div>
                 )}
-                {/* Debug: Show selfEmployed value */}
-                <div className="alert alert-info text-center mb-3">
-                  Debug: Practice Owner value to be sent: <strong>{formData.selfEmployed}</strong>
-                </div>
+                
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="position" className="form-label">Position *</label>
