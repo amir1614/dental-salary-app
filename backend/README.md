@@ -1,4 +1,6 @@
 # Dental Salary Backend
+npm run build
+   npm run deploy
 
 Express.js backend server with SQLite database for the dental salary comparison platform.
 
