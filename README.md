@@ -1,4 +1,5 @@
-
+npm run build
+   npm run deploy
 # dental.fyi - Dentist Salary Comparison Platform
 
 A comprehensive React-based web application for comparing dentist salaries across different locations and specialties, inspired by platforms like levels.fyi. Built by a high school student passionate about dental technology and transparency in healthcare compensation.
@@ -197,5 +198,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 *Transparency in compensation leads to better career decisions, fairer pay, and a more informed dental workforce.*
 
-npm run build
-   npm run deploy
+
