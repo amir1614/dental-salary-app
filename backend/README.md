@@ -1,4 +1,9 @@
 # Dental Salary Backend
+npm run build
+   npm run deploy
+   git pull origin main
+# (Resolve any merge conflicts if prompted, then:)
+git push
 
 Express.js backend server with SQLite database for the dental salary comparison platform.
 
