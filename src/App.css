@@ -40,7 +40,7 @@
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', 'Helvetica Neue', 'Source Sans Pro', Arial, sans-serif;
   background-color: #f8fafc;
   color: #222;
   margin: 0;
@@ -48,6 +48,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Helvetica Neue', 'Source Sans Pro', Arial, sans-serif;
   font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
   color: #1a4fa3;
