@@ -4,12 +4,13 @@ import { API_ENDPOINTS } from '../config/api';
 interface SalarySubmission {
   position: string;
   location: string;
-  company: string;
   baseSalary: number;
   totalComp: number;
   experience: number;
   benefits: string[];
   additionalNotes: string;
+  selfEmployed: string; // 'yes' or 'no'
+  clinicalHoursPerWeek: string;
 }
 
 interface SalarySubmissionProps {
@@ -20,12 +21,13 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
   const [formData, setFormData] = useState<SalarySubmission>({
     position: '',
     location: '',
-    company: '',
     baseSalary: 0,
     totalComp: 0,
     experience: 0,
     benefits: [],
-    additionalNotes: ''
+    additionalNotes: '',
+    selfEmployed: '',
+    clinicalHoursPerWeek: '',
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -53,17 +55,29 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
+    if (!formData.selfEmployed) {
+      setErrorMessage('Please answer whether you own or co-own a dental practice.');
+      return;
+    }
+    if (!formData.clinicalHoursPerWeek) {
+      setErrorMessage('Please select how many clinical hours you work per week.');
+      return;
+    }
     
     try {
+      const submissionData = {
+        ...formData,
+        submittedAt: new Date().toISOString()
+      };
+      console.log('Submitting payload:', submissionData);
+      console.log('API endpoint:', API_ENDPOINTS.submissions);
+      
       const response = await fetch(API_ENDPOINTS.submissions, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          submittedAt: new Date().toISOString()
-        }),
+        body: JSON.stringify(submissionData),
       });
 
       if (response.ok) {
@@ -71,12 +85,13 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
         setFormData({
           position: '',
           location: '',
-          company: '',
           baseSalary: 0,
           totalComp: 0,
           experience: 0,
           benefits: [],
-          additionalNotes: ''
+          additionalNotes: '',
+          selfEmployed: '',
+          clinicalHoursPerWeek: '',
         });
         
         // Call the callback to refresh the data
@@ -129,6 +144,10 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
                     {errorMessage}
                   </div>
                 )}
+                {/* Debug: Show selfEmployed value */}
+                <div className="alert alert-info text-center mb-3">
+                  Debug: Practice Owner value to be sent: <strong>{formData.selfEmployed}</strong>
+                </div>
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="position" className="form-label">Position *</label>
@@ -165,18 +184,57 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
                 </div>
 
                 <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label htmlFor="company" className="form-label">Company</label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
-                      id="company" 
-                      name="company"
-                      placeholder="Company name (optional)"
-                      value={formData.company}
-                      onChange={handleInputChange}
-                    />
+                  {/* Removed company name field */}
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Do you own or co-own a dental practice? *</label>
+                  <div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="selfEmployed"
+                        id="selfEmployedYes"
+                        value="yes"
+                        checked={formData.selfEmployed === 'yes'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="selfEmployedYes">Yes</label>
+                    </div>
+                    <div className="form-check form-check-inline">
+                      <input
+                        className="form-check-input"
+                        type="radio"
+                        name="selfEmployed"
+                        id="selfEmployedNo"
+                        value="no"
+                        checked={formData.selfEmployed === 'no'}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <label className="form-check-label" htmlFor="selfEmployedNo">No</label>
+                    </div>
                   </div>
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="clinicalHoursPerWeek" className="form-label">How many clinical hours do you work per week? *</label>
+                  <select
+                    className="form-select"
+                    id="clinicalHoursPerWeek"
+                    name="clinicalHoursPerWeek"
+                    value={formData.clinicalHoursPerWeek}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Select an option</option>
+                    <option value="Fewer than 30 hrs">Fewer than 30 hrs</option>
+                    <option value="30 – 35 hrs">30 – 35 hrs</option>
+                    <option value="36 – 40 hrs">36 – 40 hrs</option>
+                    <option value="More than 40 hrs">More than 40 hrs</option>
+                  </select>
                 </div>
 
                 <div className="row">

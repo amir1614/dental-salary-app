@@ -38,3 +38,73 @@
     padding: 0.5rem 0.25rem;
   }
 }
+
+body {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  color: #1a4fa3;
+  letter-spacing: 0.01em;
+}
+
+.navbar, .card-header {
+  background: #eaf3fb;
+  border-bottom: 1px solid #d1e3f8;
+}
+
+.card {
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(26, 79, 163, 0.04);
+  border: none;
+}
+
+.table th {
+  background: #eaf3fb !important;
+  color: #1a4fa3 !important;
+  font-weight: 700;
+  border-bottom: 2px solid #d1e3f8 !important;
+}
+
+.table td {
+  background: #fff;
+  border-bottom: 1px solid #eaf3fb;
+}
+
+.btn-primary, .btn-outline-primary {
+  background: #1a4fa3;
+  border-color: #1a4fa3;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.btn-primary:hover, .btn-outline-primary:hover {
+  background: #1760c4;
+  border-color: #1760c4;
+}
+
+input, select, textarea {
+  border-radius: 6px;
+  border: 1px solid #d1e3f8;
+  font-family: inherit;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #1a4fa3;
+}
+
+.alert-info {
+  background: #eaf3fb;
+  color: #1a4fa3;
+  border: none;
+}
+
+/* Add more dental-professional touches as needed */

@@ -12,6 +12,8 @@ interface UserSubmission {
   benefits: string[];
   additionalNotes: string;
   submittedAt: string;
+  selfEmployed: 'yes' | 'no';
+  clinicalHoursPerWeek?: number;
 }
 
 interface AdminDashboardProps {
@@ -150,12 +152,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                   <tr>
                     <th>Position</th>
                     <th>Location</th>
-                    <th>Company</th>
                     <th>Base Salary</th>
                     <th>Total Comp</th>
                     <th>Experience</th>
                     <th>Benefits</th>
                     <th>Submitted</th>
+                    <th>Practice Owner</th>
+                    <th>Clinical Hours/Week</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
@@ -164,7 +167,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                     <tr key={submission.id}>
                       <td><strong>{submission.position}</strong></td>
                       <td>{submission.location}</td>
-                      <td>{submission.company || 'N/A'}</td>
                       <td className="text-success fw-bold">
                         {formatCurrency(submission.baseSalary)}
                       </td>
@@ -184,6 +186,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                       <td className="text-muted small">
                         {formatDate(submission.submittedAt)}
                       </td>
+                      <td>
+                        {submission.selfEmployed === 'yes' && (
+                          <span className="text-success fw-bold">Yes</span>
+                        )}
+                        {submission.selfEmployed === 'no' && (
+                          <span className="text-danger fw-bold">No</span>
+                        )}
+                      </td>
+                      <td>{submission.clinicalHoursPerWeek || '-'}</td>
                       <td>
                         <button
                           className="btn btn-sm btn-outline-danger"

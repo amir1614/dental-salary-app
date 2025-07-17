@@ -32,7 +32,9 @@ db.serialize(() => {
       experience REAL NOT NULL,
       benefits TEXT,
       additionalNotes TEXT,
-      submittedAt TEXT NOT NULL
+      submittedAt TEXT NOT NULL,
+      selfEmployed TEXT NOT NULL,
+      clinicalHoursPerWeek TEXT
     )
   `);
   
@@ -73,7 +75,8 @@ app.get('/api/submissions', (req, res) => {
     // Parse benefits array from JSON string
     const submissions = rows.map(row => ({
       ...row,
-      benefits: row.benefits ? JSON.parse(row.benefits) : []
+      benefits: row.benefits ? JSON.parse(row.benefits) : [],
+      selfEmployed: row.selfEmployed === 'yes' ? 'yes' : 'no',
     }));
     
     res.json(submissions);
@@ -81,56 +84,83 @@ app.get('/api/submissions', (req, res) => {
 });
 
 app.post('/api/submissions', (req, res) => {
+  console.log('Full request body:', req.body);
   const {
     position,
     location,
-    company,
     baseSalary,
     totalComp,
     experience,
     benefits,
     additionalNotes,
-    submittedAt
+    submittedAt,
+    selfEmployed,
+    clinicalHoursPerWeek
   } = req.body;
 
   // Validate required fields
-  if (!position || !location || !baseSalary || !totalComp || experience === undefined) {
+  if (!position || !location || baseSalary === undefined || baseSalary === null || 
+      totalComp === undefined || totalComp === null || 
+      experience === undefined || experience === null
+      || (selfEmployed !== 'yes' && selfEmployed !== 'no')
+  ) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
+  
+  // Log the received data for debugging
+  console.log('Received submission data:', {
+    position,
+    location,
+    baseSalary,
+    totalComp,
+    experience,
+    benefits: benefits ? benefits.length : 0,
+    additionalNotes: additionalNotes ? 'provided' : 'not provided',
+    submittedAt,
+    selfEmployed
+  });
 
   const id = uuidv4();
   const benefitsJson = JSON.stringify(benefits || []);
 
   const stmt = db.prepare(`
     INSERT INTO salary_submissions 
-    (id, position, location, company, baseSalary, totalComp, experience, benefits, additionalNotes, submittedAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    (id, position, location, company, baseSalary, totalComp, experience, benefits, additionalNotes, submittedAt, selfEmployed, clinicalHoursPerWeek)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   stmt.run(
     id,
     position,
     location,
-    company || '',
+    '', // company removed from form
     baseSalary,
     totalComp,
     experience,
     benefitsJson,
     additionalNotes || '',
-    submittedAt
-  );
-
-  stmt.finalize((err) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
+    submittedAt,
+    selfEmployed === 'yes' ? 'yes' : 'no', // store as string 'yes' or 'no'
+    clinicalHoursPerWeek,
+    function(err) {
+      if (err) {
+        console.error('Database error (run):', err);
+        return res.status(500).json({ error: 'Database error', details: err.message });
+      }
+      // Log the inserted row for debugging
+      db.get('SELECT * FROM salary_submissions WHERE id = ?', [id], (err, row) => {
+        if (err) {
+          console.error('Error fetching inserted row:', err);
+        } else {
+          console.log('Inserted row:', row);
+        }
+      });
+      res.status(201).json({ 
+        message: 'Salary submission created successfully',
+        id: id
+      });
     }
-    
-    res.status(201).json({ 
-      message: 'Salary submission created successfully',
-      id: id
-    });
-  });
+  );
 });
 
 // Admin authentication middleware
@@ -187,7 +217,8 @@ app.get('/api/admin/submissions', authenticateAdmin, (req, res) => {
     
     const submissions = rows.map(row => ({
       ...row,
-      benefits: row.benefits ? JSON.parse(row.benefits) : []
+      benefits: row.benefits ? JSON.parse(row.benefits) : [],
+      selfEmployed: row.selfEmployed === 'yes' ? 'yes' : 'no',
     }));
     
     res.json(submissions);

@@ -32,6 +32,8 @@ interface UserSubmission {
   benefits: string[];
   additionalNotes: string;
   submittedAt: string;
+  selfEmployed: 'yes' | 'no' | 'unknown';
+  clinicalHoursPerWeek?: number;
 }
 
 function App() {
@@ -164,11 +166,12 @@ function App() {
                 <tr>
                   <th>Position</th>
                   <th>Location</th>
-                  <th>Company</th>
                   <th>Base Salary</th>
                   <th>Total Comp</th>
                   <th>Experience</th>
                   <th>Benefits</th>
+                  <th>Practice Owner</th>
+                  <th>Clinical Hours/Week</th>
                 </tr>
               </thead>
               <tbody>
@@ -176,7 +179,6 @@ function App() {
                   <tr key={item.id}>
                     <td><strong>{item.position}</strong></td>
                     <td>{item.location}</td>
-                    <td>{item.company || 'N/A'}</td>
                     <td className="text-success fw-bold">{formatCurrency(item.baseSalary)}</td>
                     <td className="text-success fw-bold">{formatCurrency(item.totalComp)}</td>
                     <td>{item.experience} yrs</td>
@@ -189,6 +191,19 @@ function App() {
                         <span className="text-muted">None listed</span>
                       )}
                     </td>
+                    <td>
+  {/* Practice Owner: Show Yes/No/N/A */}
+  {item.selfEmployed === 'yes' && (
+    <span className="text-success fw-bold">Yes</span>
+  )}
+  {item.selfEmployed === 'no' && (
+    <span className="text-danger fw-bold">No</span>
+  )}
+  {(!item.selfEmployed || (item.selfEmployed !== 'yes' && item.selfEmployed !== 'no')) && (
+    <span className="text-muted">N/A</span>
+  )}
+</td>
+<td>{item.clinicalHoursPerWeek ? item.clinicalHoursPerWeek : <span className="text-muted">N/A</span>}</td>
                   </tr>
                 ))}
               </tbody>
@@ -216,7 +231,9 @@ function App() {
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom shadow-sm">
         <div className="container">
-          <a className="navbar-brand fw-bold text-primary" href="#" onClick={() => setCurrentPage('home')}>dental.fyi</a>
+          <a className="navbar-brand fw-bold text-primary" href="#" onClick={() => setCurrentPage('home')}>
+            dental.fyi
+          </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
