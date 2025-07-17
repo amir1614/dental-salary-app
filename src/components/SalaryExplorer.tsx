@@ -65,8 +65,31 @@ const SalaryExplorer: React.FC = () => {
     <div className="container py-4">
       <div className="row mb-4">
         <div className="col-md-6">
-          <h2 className="text-primary mb-3">BLS Salary Data Explorer</h2>
-          <p className="text-muted">Official Bureau of Labor Statistics data for General Dentists</p>
+          <h2
+  className="mb-2"
+  style={{
+    fontFamily: `'Inter', 'Helvetica Neue', 'Source Sans Pro', Arial, sans-serif`,
+    fontWeight: 600,
+    color: '#1a4fa3',
+    letterSpacing: '0.01em',
+    fontSize: '2.1rem',
+    marginBottom: '0.5rem',
+  }}
+>
+  U.S. Bureau of Labor Statistics — Dentist Compensation Data
+</h2>
+<p
+  className="text-muted mb-3"
+  style={{
+    fontFamily: `'Inter', 'Helvetica Neue', 'Source Sans Pro', Arial, sans-serif`,
+    fontWeight: 500,
+    fontSize: '1.05rem',
+    color: '#495057',
+    marginBottom: '1.2rem',
+  }}
+>
+  Authoritative salary and compensation figures for U.S. dentists, sourced directly from the BLS.
+</p>
         </div>
         <div className="col-md-6">
           <div className="input-group">
