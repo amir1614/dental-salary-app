@@ -171,15 +171,16 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
                   <div className="col-md-6 mb-3">
                     <label htmlFor="location" className="form-label">Location *</label>
                     <input 
-                      type="text" 
-                      className="form-control" 
-                      id="location" 
-                      name="location"
-                      placeholder="City, State"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      required
-                    />
+  type="text" 
+  className="form-control" 
+  id="location" 
+  name="location"
+  placeholder="City, State"
+  value={formData.location}
+  onChange={handleInputChange}
+  required
+/>
+<small className="form-text text-muted ms-1">e.g. San Jose, CA</small>
                   </div>
                 </div>
 
