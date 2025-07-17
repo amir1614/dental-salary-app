@@ -29,6 +29,7 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -51,6 +52,7 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage(null);
     
     try {
       const response = await fetch(API_ENDPOINTS.submissions, {
@@ -82,11 +84,12 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
           onSubmissionSuccess();
         }
       } else {
-        alert('Error submitting data. Please try again.');
+        const errorData = await response.json();
+        setErrorMessage(errorData.error || 'Error submitting data. Please try again.');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting data:', error);
-      alert('Error submitting data. Please try again.');
+      setErrorMessage(error.message || 'Error submitting data. Please try again.');
     }
   };
 
@@ -121,6 +124,11 @@ const SalarySubmission: React.FC<SalarySubmissionProps> = ({ onSubmissionSuccess
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
+                {errorMessage && (
+                  <div className="alert alert-danger text-center mb-3">
+                    {errorMessage}
+                  </div>
+                )}
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="position" className="form-label">Position *</label>
