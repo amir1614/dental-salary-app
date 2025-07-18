@@ -41,11 +41,6 @@ A comprehensive React-based web application for comparing dentist salaries acros
 - **Bootstrap 5** for responsive design
 - **Bootstrap Icons** for visual elements
 - **Local Storage** for session management
-- npm run build
-app.use(express.static(path.join(__dirname, '../client/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
 
 
 ### **Backend**
