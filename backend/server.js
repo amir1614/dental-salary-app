@@ -6,7 +6,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
@@ -14,6 +14,9 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Serve frontend static files (React build)
+app.use(express.static(path.join(__dirname, '../build')));
 
 // Database setup
 const dbPath = path.join(__dirname, 'database.sqlite');
@@ -37,7 +40,7 @@ db.serialize(() => {
       clinicalHoursPerWeek TEXT
     )
   `);
-  
+
   db.run(`
     CREATE TABLE IF NOT EXISTS admin_users (
       id TEXT PRIMARY KEY,
@@ -46,14 +49,13 @@ db.serialize(() => {
       created_at TEXT NOT NULL
     )
   `);
-  
-  // Insert default admin user if not exists
+
   const defaultAdmin = {
     username: 'admin',
-    password: 'admin123', // Change this in production!
+    password: 'admin123',
     password_hash: crypto.createHash('sha256').update('admin123').digest('hex')
   };
-  
+
   db.get('SELECT id FROM admin_users WHERE username = ?', [defaultAdmin.username], (err, row) => {
     if (!row) {
       db.run(`
@@ -64,61 +66,28 @@ db.serialize(() => {
   });
 });
 
-// Routes
+// API Routes
 app.get('/api/submissions', (req, res) => {
   db.all('SELECT * FROM salary_submissions ORDER BY submittedAt DESC', (err, rows) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    // Parse benefits array from JSON string
+    if (err) return res.status(500).json({ error: 'Database error' });
     const submissions = rows.map(row => ({
       ...row,
       benefits: row.benefits ? JSON.parse(row.benefits) : [],
       selfEmployed: row.selfEmployed === 'yes' ? 'yes' : 'no',
     }));
-    
     res.json(submissions);
   });
 });
 
 app.post('/api/submissions', (req, res) => {
-  console.log('Full request body:', req.body);
   const {
-    position,
-    location,
-    baseSalary,
-    totalComp,
-    experience,
-    benefits,
-    additionalNotes,
-    submittedAt,
-    selfEmployed,
-    clinicalHoursPerWeek
+    position, location, baseSalary, totalComp, experience,
+    benefits, additionalNotes, submittedAt, selfEmployed, clinicalHoursPerWeek
   } = req.body;
 
-  // Validate required fields
-  if (!position || !location || baseSalary === undefined || baseSalary === null || 
-      totalComp === undefined || totalComp === null || 
-      experience === undefined || experience === null
-      || (selfEmployed !== 'yes' && selfEmployed !== 'no')
-  ) {
+  if (!position || !location || baseSalary == null || totalComp == null || experience == null || (selfEmployed !== 'yes' && selfEmployed !== 'no')) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
-  
-  // Log the received data for debugging
-  console.log('Received submission data:', {
-    position,
-    location,
-    baseSalary,
-    totalComp,
-    experience,
-    benefits: benefits ? benefits.length : 0,
-    additionalNotes: additionalNotes ? 'provided' : 'not provided',
-    submittedAt,
-    selfEmployed
-  });
 
   const id = uuidv4();
   const benefitsJson = JSON.stringify(benefits || []);
@@ -129,160 +98,63 @@ app.post('/api/submissions', (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
-  stmt.run(
-    id,
-    position,
-    location,
-    '', // company removed from form
-    baseSalary,
-    totalComp,
-    experience,
-    benefitsJson,
-    additionalNotes || '',
-    submittedAt,
-    selfEmployed === 'yes' ? 'yes' : 'no', // store as string 'yes' or 'no'
-    clinicalHoursPerWeek,
+  stmt.run(id, position, location, '', baseSalary, totalComp, experience, benefitsJson, additionalNotes || '', submittedAt, selfEmployed, clinicalHoursPerWeek,
     function(err) {
-      if (err) {
-        console.error('Database error (run):', err);
-        return res.status(500).json({ error: 'Database error', details: err.message });
-      }
-      // Log the inserted row for debugging
-      db.get('SELECT * FROM salary_submissions WHERE id = ?', [id], (err, row) => {
-        if (err) {
-          console.error('Error fetching inserted row:', err);
-        } else {
-          console.log('Inserted row:', row);
-        }
-      });
-      res.status(201).json({ 
-        message: 'Salary submission created successfully',
-        id: id
-      });
+      if (err) return res.status(500).json({ error: 'Database error', details: err.message });
+      res.status(201).json({ message: 'Salary submission created successfully', id });
     }
   );
 });
 
-// Admin authentication middleware
 const authenticateAdmin = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'No token provided' });
-  }
-
-  const token = authHeader.substring(7);
-  // In a real app, you'd verify the JWT token
-  // For simplicity, we'll just check if it exists
-  if (token) {
-    next();
-  } else {
-    res.status(401).json({ error: 'Invalid token' });
-  }
+  const token = req.headers.authorization?.split(' ')[1];
+  if (token) return next();
+  res.status(401).json({ error: 'Unauthorized' });
 };
 
-// Admin login
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
-  
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password required' });
-  }
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
 
   const passwordHash = crypto.createHash('sha256').update(password).digest('hex');
-  
-  db.get('SELECT * FROM admin_users WHERE username = ? AND password_hash = ?', 
-    [username, passwordHash], (err, row) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    if (!row) {
-      return res.status(401).json({ error: 'Invalid credentials' });
-    }
-    
-    // Generate a simple token (in production, use JWT)
+
+  db.get('SELECT * FROM admin_users WHERE username = ? AND password_hash = ?', [username, passwordHash], (err, row) => {
+    if (!row) return res.status(401).json({ error: 'Invalid credentials' });
     const token = crypto.randomBytes(32).toString('hex');
     res.json({ token, message: 'Login successful' });
   });
 });
 
-// Admin get all submissions
 app.get('/api/admin/submissions', authenticateAdmin, (req, res) => {
   db.all('SELECT * FROM salary_submissions ORDER BY submittedAt DESC', (err, rows) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
+    if (err) return res.status(500).json({ error: 'Database error' });
     const submissions = rows.map(row => ({
       ...row,
       benefits: row.benefits ? JSON.parse(row.benefits) : [],
       selfEmployed: row.selfEmployed === 'yes' ? 'yes' : 'no',
     }));
-    
     res.json(submissions);
   });
 });
 
-// Admin delete submission
 app.delete('/api/admin/submissions/:id', authenticateAdmin, (req, res) => {
-  const { id } = req.params;
-  
-  db.run('DELETE FROM salary_submissions WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Submission not found' });
-    }
-    
+  db.run('DELETE FROM salary_submissions WHERE id = ?', [req.params.id], function(err) {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (this.changes === 0) return res.status(404).json({ error: 'Submission not found' });
     res.json({ message: 'Submission deleted successfully' });
   });
 });
 
-// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Serve React frontend
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+});
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-  console.log(`Database file: ${dbPath}`);
-});
-
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('\nShutting down server...');
-  db.close((err) => {
-    if (err) {
-      console.error('Error closing database:', err);
-    } else {
-      console.log('Database connection closed.');
-    }
-    process.exit(0);
-  });
-}); 
-const express = require("express");
-const path = require("path");
-const app = express();
-
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, "../build")));
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../build", "index.html"));
-});
-
-// Add this to serve any other route (React Router fallback)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../build", "index.html"));
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
